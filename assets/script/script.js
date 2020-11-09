@@ -15,7 +15,6 @@ function searchCity(e){
     e.preventDefault();
     //get the value of the city
     var city = citiesEl.val().toLowerCase();
-    if(!checkSpelling(city)){return};
 
     var APIKey = "32cb77893648df67d6826f666fc7871c";
     var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + APIKey;
@@ -80,10 +79,12 @@ function cityHistoryEvent(e){
     
 }
 
-//=================DISPLAY HISTORY CITY===============
+//=================DISPLAY CITY INFO===============
 function displayCityInfo(city){
     console.log("hit");
+    
     cityInfoEl.empty();
+
     var jsonCitiesArray = getDataFromLocalStorage();
     if(jsonCitiesArray == null){return};
     for( var i = 0; i < jsonCitiesArray.length; i++){
@@ -94,9 +95,12 @@ function displayCityInfo(city){
             var windSpeed = $('<p>').text("Wind Speed: " + jsonCitiesArray[i].citySpeed[0] + " MPH");
             var icon = $('<img>').attr('src', jsonCitiesArray[i].cityIcon[0]);
         }
-        title.append(icon);
-        cityInfoEl.append(title,temp,hum, windSpeed);
-    } 
+        
+        //title.append(icon);
+        cityInfoEl.append(title,temp,hum, windSpeed, icon);
+    }
+    
+    
 }
 //=================SET DATA TO lOCAL STORAGE===============
 function setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate){
@@ -131,28 +135,20 @@ function getDataFromLocalStorage(){
 function checkDoubleSearchCity(city){
     var jsonCitiesArray = getDataFromLocalStorage();
     if(jsonCitiesArray == null){return};
-    
+    var count = 0;
     for( var i = 0; i < jsonCitiesArray.length; i++){
         if(jsonCitiesArray[i].cityName == city){
-            return true;
+            count++;
         }
-        else{
-            return false;
-        }
+        
     }
-}
-//===================CHECK DOUBLE SPELLING=====================
-function checkSpelling(city){
-    city = city.charAt(0).toUpperCase() + city.slice(1);
-    console.log(city);
-    if(citiesTags.includes(city)){
-        return true;
-    }
-    else{
+    if(count === 0){
         return false;
     }
+    else{
+        return true;
+    }
 }
-
 
 //add a click event to cities to get cities info and call a display function
 //each display is going to have a button to be able to  change display from response   

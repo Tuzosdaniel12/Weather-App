@@ -116,8 +116,8 @@ function displayForecast(city){
     for( var i = 0; i < jsonCitiesArray.length; i++){
         if(jsonCitiesArray[i].cityName === city){
             for( var j = 0; j < 5; j++){
-                var forecastDiv = $('<div>').addClass('col-12 col-sm-12 col-lg bg-primary rounded ml-3 mb-3');
-                var dateEl = $('<h4>').text(jsonCitiesArray[i].cityDate[j]);
+                var forecastDiv = $('<div>').addClass('col-12 col-md-2  bg-primary rounded ml-3 mb-3');
+                var dateEl = $('<h5>').text(jsonCitiesArray[i].cityDate[j]);
                 var iconEl = $('<img>').attr('src',jsonCitiesArray[i].cityIcon[j]);
                 var tempEl = $('<p>').text("Temp: "+jsonCitiesArray[i].cityTemp[j]+ "F");
                 var humEl = $('<p>').text("Humidity: "+jsonCitiesArray[i].cityHum[j]+"%");
@@ -192,6 +192,6 @@ displayForecast(get[lastCityDisplay].cityName);
 }
 //==================EVENT LISTENERS====================
 
-citiesEl.on('submit', searchCity);
+citiesEl.submit(searchCity);
 btnCities.on('click', searchCity);
 cityListEL.on('click', cityHistoryEvent);

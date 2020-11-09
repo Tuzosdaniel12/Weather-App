@@ -3,8 +3,10 @@ var citiesEl = $('#cities');
 var btnCities = $('#btn-search');
 var cityListEL = $('#cities-list');
 var cityInfoEl = $('#city-info');
+var forecastEl = $('#forecast');
 
 var cities  = [];
+var lastCityDisplay;
 
 citiesEl.autocomplete({
       source: citiesTags
@@ -54,6 +56,7 @@ function searchCity(e){
         //console.log(cityName);
         displayCityList();
         displayCityInfo(cityName);
+        displayForecast(cityName);
         
     });
 }
@@ -66,6 +69,7 @@ function displayCityList(){
     for( var i = 0; i < jsonCitiesArray.length; i++){
         var cityTitle = $('<li>').addClass('list-group-item')
                                  .attr('data-city', jsonCitiesArray[i].cityName)
+                                 .attr('data-index', i)
                                  .text(jsonCitiesArray[i].cityName);
         cityListEL.prepend(cityTitle);
     } 
@@ -76,13 +80,17 @@ function cityHistoryEvent(e){
     console.log("hit");
     console.log($(e.target).data('city'));
     displayCityInfo($(e.target).data('city'));
+    displayForecast($(e.target).data('city'));
+    lastCityDisplay = parseInt($(e.target).data('index'));
+
+    localStorage.setItem('lastCityDisplay', JSON.stringify(lastCityDisplay));
+    
     
 }
 
 //=================DISPLAY CITY INFO===============
 function displayCityInfo(city){
     console.log("hit");
-    
     cityInfoEl.empty();
 
     var jsonCitiesArray = getDataFromLocalStorage();
@@ -99,9 +107,29 @@ function displayCityInfo(city){
         //title.append(icon);
         cityInfoEl.append(title,temp,hum, windSpeed, icon);
     }
-    
-    
 }
+//=================DISPLAY 5 Day FORECAST===============
+function displayForecast(city){
+    forecastEl.empty();
+    var jsonCitiesArray = getDataFromLocalStorage();
+    if(jsonCitiesArray == null){return};
+    for( var i = 0; i < jsonCitiesArray.length; i++){
+        if(jsonCitiesArray[i].cityName === city){
+            for( var j = 0; j < 5; j++){
+                var forecastDiv = $('<div>').addClass('col-12 col-sm-12 col-lg bg-primary rounded ml-3 mb-3');
+                var dateEl = $('<h4>').text(jsonCitiesArray[i].cityDate[j]);
+                var iconEl = $('<img>').attr('src',jsonCitiesArray[i].cityIcon[j]);
+                var tempEl = $('<p>').text("Temp: "+jsonCitiesArray[i].cityTemp[j]+ "F");
+                var humEl = $('<p>').text("Humidity: "+jsonCitiesArray[i].cityHum[j]+"%");
+
+                forecastDiv.append(dateEl,iconEl,tempEl,humEl);
+                forecastEl.append(forecastDiv);
+            }
+        }
+    }
+
+}
+
 //=================SET DATA TO lOCAL STORAGE===============
 function setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate){
     
@@ -155,6 +183,13 @@ function checkDoubleSearchCity(city){
 //
 
 displayCityList();
+
+if (JSON.parse(localStorage.getItem('lastCityDisplay')) !== null){
+var get = getDataFromLocalStorage();
+lastCityDisplay = JSON.parse(localStorage.getItem('lastCityDisplay'));
+displayCityInfo(get[lastCityDisplay].cityName);
+displayForecast(get[lastCityDisplay].cityName);
+}
 //==================EVENT LISTENERS====================
 
 citiesEl.on('submit', searchCity);

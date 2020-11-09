@@ -24,15 +24,17 @@
         </header>
         <!--aside-->
         <div class="row h-100">
-            <aside class="col-lg col-md-5 ">
+            <aside class="col-md-12 col-lg  ">
                 <!--search box-->
                 <div class="input-group flex-nowrap ui-widget mb-3">
-                    <input id="cities" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
-                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                    <input id="cities" type="text" class="form-control" placeholder="City">
+                    <button class="btn btn-primary" id="btn-search" type="submit"><i class="fas fa-search"></i></button>
                 </div>
                 <!--name of cities searched for-->
                 <div class="card mb-3 ">
-                    <ul class="list-group list-group-flush">
+                    
+                    <ul class="list-group list-group-flush" id="cities-list">
+                        <!--going to make this with jQuery-->
                       <li class="list-group-item">Cras justo odio</li>
                       <li class="list-group-item">Dapibus ac facilisis in</li>
                       <li class="list-group-item">Vestibulum at eros</li>
@@ -40,52 +42,51 @@
                 </div>
             </aside>
             <!--cities chosen info-->
-            <section class="col-lg-9 col-md-7 ">
+            <section class="col-md-12 col-lg-9">
             
-                <div class="col h-65 border rounded mb-3" id="city-info">
+                <div class="col border rounded mb-3" id="city-info">
                     <h3>5-Day Forecast:</h3>
                     <p>WindSpeed</p>
                     <p>WindSpeed</p>
                     <p>WindSpeed</p>
                     <p>WindSpeed</p>
                 </div>
-                <div class="col h-25">
+                <div class="col pl-0">
                     <h3 class="mb-2">5-Day Forecast:</h3>
-                    <div class="container" id="day-forecast">
-                        <div class="row">
-                          <div class="col-sm">
+                    <div class="row text-white">
+                        <div class="col-12 col-sm-12 col-lg bg-primary rounded ml-3 mb-3">
                             <h4>Date</h4>
                             <i class="far fa-sun"></i>
                             <p>Temp:</p>
                             <p>Humidity</p>
-                          </div>
-                          <div class="col-sm">
-                            <h4>Date</h4>
-                            <i class="far fa-sun"></i>
-                            <p>Temp:</p>
-                            <p>Humidity</p>
-                          </div>
-                          <div class="col-sm">
-                            <h4>Date</h4>
-                            <i class="far fa-sun"></i>
-                            <p>Temp:</p>
-                            <p>Humidity</p>
-                          </div>
-                          <div class="col-sm">
-                            <h4>Date</h4>
-                            <i class="far fa-sun"></i>
-                            <p>Temp:</p>
-                            <p>Humidity</p>
-                          </div>
-                          <div class="col-sm">
-                            <h4>Date</h4>
-                            <i class="far fa-sun"></i>
-                            <p>Temp:</p>
-                            <p>Humidity</p>
-                          </div>
                         </div>
-                      </div>
+                        <div class="col-12 col-sm-12 col-lg bg-primary rounded ml-3 mb-3">
+                            <h4>Date</h4>
+                            <i class="far fa-sun"></i>
+                            <p>Temp:</p>
+                            <p>Humidity</p>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg bg-primary rounded ml-3 mb-3">
+                            <h4>Date</h4>
+                            <i class="far fa-sun"></i>
+                            <p>Temp:</p>
+                            <p>Humidity</p>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg bg-primary rounded ml-3 mb-3">
+                            <h4>Date</h4>
+                            <i class="far fa-sun"></i>
+                            <p>Temp:</p>
+                            <p>Humidity</p>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg bg-primary rounded ml-3 mb-3">
+                            <h4>Date</h4>
+                            <i class="far fa-sun"></i>
+                            <p>Temp:</p>
+                            <p>Humidity</p>
+                        </div>
 
+                        
+                    </div>
                 </div>
               
             </section>
@@ -96,6 +97,7 @@
      <!--Header-->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
      <script src="assets/script/script.js"></script>
 </body>
 </html>

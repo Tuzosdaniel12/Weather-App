@@ -161,7 +161,7 @@ function findUvIndex(lat, lon, object){
         method: "GET"
     }).then(function(response){
         console.log(response);
-        var value = parseInt(response.value);
+        var value = response.value;
         console.log("UVINDEX: "+value);
         firstResponse(object,value);
     });

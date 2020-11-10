@@ -1,24 +1,22 @@
-.green{
+.styleUV-index{
     width: fit-content;
-    background-color: green;
     color: white;
     font-weight: bold;
+    border-style:solid ;
+    border-radius: 1px;
+    border: black;
+}
+.green{
+    background-color: green; 
 }
 .yellow{
-    width: fit-content;
     background-color: yellow;
     color: black;
-    font-weight: bold;
 }
 .orange{
-    width: fit-content;
     background-color: orange;
     color: black;
-    font-weight: bold;
 }
 .red{
-    width: fit-content;
     background-color: red;
-    color: black;
-    font-weight: bold;
 }

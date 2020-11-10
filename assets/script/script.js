@@ -203,19 +203,19 @@ function firstResponse(object,value){
 function checkUVIndexValue(index){
     index = parseInt(index);
     if(index < 3){
-        return ".green";
+        return " styleUV-index green";
     }
     else if(index >=3 && index <= 5)
     {
-        return ".yellow";
+        return "styleUV-index yellow";
     }
     else if(index >=6 && index <= 7)
     {
-        return ".orange";
+        return "styleUV-index orange";
     }
     else 
     {
-        return ".red";
+        return "styleUV-index red";
     }
 }
 //add a click event to cities to get cities info and call a display function

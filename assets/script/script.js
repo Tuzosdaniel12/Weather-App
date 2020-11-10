@@ -6,7 +6,11 @@ var cityInfoEl = $('#city-info');
 var forecastEl = $('#forecast');
 
 var cities  = [];
+var uvIndex = [];
+var uvClass;
 var lastCityDisplay;
+var value;
+
 
 citiesEl.autocomplete({
       source: citiesTags
@@ -27,14 +31,17 @@ function searchCity(e){
     }).then(function(response){
         console.log(response);
         var cityName = response.city.name;
+        findUvIndex(response.city.coord.lat, response.city.coord.lon);
         var cityHum = [];
         var cityTemp = [];
         var cityIcon = [];
         var citySpeed = [];
         var cityDate = [];
+
+        
  
         
-
+        
         if(checkDoubleSearchCity(cityName)){
             alert('You already picked this city');
             return};
@@ -46,11 +53,10 @@ function searchCity(e){
             cityIcon.push("http://openweathermap.org/img/w/" + response.list[i].weather[0].icon + ".png");
             citySpeed.push(response.list[i].wind.speed);
             cityDate.push(date(i));
+            
             //console.log(cityHum[i]);
             //console.log("hit");
         }
-
-        
 
         setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate);
         //console.log(cityName);
@@ -84,13 +90,11 @@ function cityHistoryEvent(e){
     lastCityDisplay = parseInt($(e.target).data('index'));
 
     localStorage.setItem('lastCityDisplay', JSON.stringify(lastCityDisplay));
-    
-    
 }
 
 //=================DISPLAY CITY INFO===============
 function displayCityInfo(city){
-    console.log("hit");
+    //console.log("hit");
     cityInfoEl.empty();
 
     var jsonCitiesArray = getDataFromLocalStorage();
@@ -101,11 +105,11 @@ function displayCityInfo(city){
             var temp = $("<p>").text("Temperature: "+ jsonCitiesArray[i].cityTemp[0] + " F");
             var hum = $("<p>").text("Humidity: "+ jsonCitiesArray[i].cityHum[0] + "%");
             var windSpeed = $('<p>').text("Wind Speed: " + jsonCitiesArray[i].citySpeed[0] + " MPH");
-            var icon = $('<img>').attr('src', jsonCitiesArray[i].cityIcon[0]);
+            var icon = $('<img>').attr('src', jsonCitiesArray[i].cityIcon[0]);         
         }
         
         //title.append(icon);
-        cityInfoEl.append(title,temp,hum, windSpeed, icon);
+        cityInfoEl.append(title,temp,hum, windSpeed, icon, uvIndex);
     }
 }
 //=================DISPLAY 5 Day FORECAST===============
@@ -142,7 +146,7 @@ function setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,city
                   cityTemp:cityTemp,
                   cityIcon: cityIcon,
                   citySpeed: citySpeed,
-                  cityDate: cityDate,      
+                  cityDate: cityDate,
     });
     localStorage.setItem('allTheCitiesSearchedFor', JSON.stringify(cities));
 }
@@ -167,8 +171,7 @@ function checkDoubleSearchCity(city){
     for( var i = 0; i < jsonCitiesArray.length; i++){
         if(jsonCitiesArray[i].cityName == city){
             count++;
-        }
-        
+        }    
     }
     if(count === 0){
         return false;
@@ -178,6 +181,43 @@ function checkDoubleSearchCity(city){
     }
 }
 
+//================= SET UV  INDEX============================
+function findUvIndex(lat, lon){
+    var APIKey = "32cb77893648df67d6826f666fc7871c";
+    var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat="+ lat +"&lon="+lon +"&appid=" + APIKey;
+    
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        value = parseInt(response.value);
+        console.log(value)
+    });
+    console.log(value)
+    return value;
+    
+}
+
+//=============================CHECK UV INDEX=======================
+function checkUVIndexValue(index){
+    index = parseInt(index);
+    if(index < 3){
+        uvClass = ".green";
+    }
+    else if(index >=3 && index <= 5)
+    {
+        uvClass = ".yellow";
+    }
+    else if(index >=6 && index <= 7)
+    {
+        uvClass = ".orange";
+    }
+    else 
+    {
+        uvClass = ".red";
+    }
+    return uvClass;
+}
 //add a click event to cities to get cities info and call a display function
 //each display is going to have a button to be able to  change display from response   
 //
@@ -187,9 +227,11 @@ displayCityList();
 if (JSON.parse(localStorage.getItem('lastCityDisplay')) !== null){
 var get = getDataFromLocalStorage();
 lastCityDisplay = JSON.parse(localStorage.getItem('lastCityDisplay'));
+//console.log(lastCityDisplay);
 displayCityInfo(get[lastCityDisplay].cityName);
 displayForecast(get[lastCityDisplay].cityName);
 }
+
 //==================EVENT LISTENERS====================
 
 citiesEl.submit(searchCity);

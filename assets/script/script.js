@@ -154,7 +154,7 @@ function checkDoubleSearchCity(city){
 //================= SET UV  INDEX============================
 function findUvIndex(lat, lon, object){
     var APIKey = "32cb77893648df67d6826f666fc7871c";
-    var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat="+ lat +"&lon="+lon +"&appid=" + APIKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat="+ lat +"&lon="+lon +"&appid=" + APIKey;
     
     $.ajax({
         url: queryURL,

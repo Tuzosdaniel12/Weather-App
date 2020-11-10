@@ -30,40 +30,7 @@ function searchCity(e){
         method: "GET"
     }).then(function(response){
         console.log(response);
-        var cityName = response.city.name;
-        findUvIndex(response.city.coord.lat, response.city.coord.lon);
-        var cityHum = [];
-        var cityTemp = [];
-        var cityIcon = [];
-        var citySpeed = [];
-        var cityDate = [];
-
-        
- 
-        
-        
-        if(checkDoubleSearchCity(cityName)){
-            alert('You already picked this city');
-            return};
-        
-        for(var i = 0; i < 5; i++){
-            //console.log("hit");
-            cityHum.push(response.list[i].main.humidity);
-            cityTemp.push(toFahrenheit(response.list[i].main.temp));
-            cityIcon.push("http://openweathermap.org/img/w/" + response.list[i].weather[0].icon + ".png");
-            citySpeed.push(response.list[i].wind.speed);
-            cityDate.push(date(i));
-            
-            //console.log(cityHum[i]);
-            //console.log("hit");
-        }
-
-        setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate);
-        //console.log(cityName);
-        displayCityList();
-        displayCityInfo(cityName);
-        displayForecast(cityName);
-        
+        findUvIndex(response.city.coord.lat, response.city.coord.lon, response);
     });
 }
 //==============DISPLAY CITY FUNCTION===============
@@ -105,11 +72,12 @@ function displayCityInfo(city){
             var temp = $("<p>").text("Temperature: "+ jsonCitiesArray[i].cityTemp[0] + " F");
             var hum = $("<p>").text("Humidity: "+ jsonCitiesArray[i].cityHum[0] + "%");
             var windSpeed = $('<p>').text("Wind Speed: " + jsonCitiesArray[i].citySpeed[0] + " MPH");
-            var icon = $('<img>').attr('src', jsonCitiesArray[i].cityIcon[0]);         
+            var icon = $('<img>').attr('src', jsonCitiesArray[i].cityIcon[0]);  
+            var uv = $('<p>').text("UV Index: "+ jsonCitiesArray[i].uvIndex).addClass(checkUVIndexValue(jsonCitiesArray[i].uvIndex));        
         }
         
         //title.append(icon);
-        cityInfoEl.append(title,temp,hum, windSpeed, icon, uvIndex);
+        cityInfoEl.append(title,temp,hum, windSpeed, icon, uv);
     }
 }
 //=================DISPLAY 5 Day FORECAST===============
@@ -135,8 +103,8 @@ function displayForecast(city){
 }
 
 //=================SET DATA TO lOCAL STORAGE===============
-function setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate){
-    
+function setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate,uvIndex){
+    console.log("uvINdex line 137: "+ uvIndex);
     if(getDataFromLocalStorage() !== null){
         cities = getDataFromLocalStorage();
         console.log(cities);
@@ -147,9 +115,11 @@ function setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,city
                   cityIcon: cityIcon,
                   citySpeed: citySpeed,
                   cityDate: cityDate,
+                  uvIndex: uvIndex
     });
     localStorage.setItem('allTheCitiesSearchedFor', JSON.stringify(cities));
 }
+
 //=================TO FAHRENHEIT============================
 function toFahrenheit(temp){
     return Math.round((parseInt(temp) - 273.15) * 1.8 + 32);
@@ -182,7 +152,7 @@ function checkDoubleSearchCity(city){
 }
 
 //================= SET UV  INDEX============================
-function findUvIndex(lat, lon){
+function findUvIndex(lat, lon, object){
     var APIKey = "32cb77893648df67d6826f666fc7871c";
     var queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat="+ lat +"&lon="+lon +"&appid=" + APIKey;
     
@@ -190,33 +160,63 @@ function findUvIndex(lat, lon){
         url: queryURL,
         method: "GET"
     }).then(function(response){
-        value = parseInt(response.value);
-        console.log(value)
+        console.log(response);
+        var value = parseInt(response.value);
+        console.log("UVINDEX: "+value);
+        firstResponse(object,value);
     });
-    console.log(value)
-    return value;
     
+}
+//=================GET RESPONSE AND SET DATA=====================
+function firstResponse(object,value){
+    var cityName = object.city.name;
+    var cityHum = [];
+    var cityTemp = [];
+    var cityIcon = [];
+    var citySpeed = [];
+    var cityDate = [];
+    
+    if(checkDoubleSearchCity(cityName)){
+        alert('You already picked this city');
+        return};
+    
+    for(var i = 0; i < 5; i++){
+        //console.log("hit");
+        cityHum.push(object.list[i].main.humidity);
+        cityTemp.push(toFahrenheit(object.list[i].main.temp));
+        cityIcon.push("http://openweathermap.org/img/w/" + object.list[i].weather[0].icon + ".png");
+        citySpeed.push(object.list[i].wind.speed);
+        cityDate.push(date(i));
+        
+        //console.log(cityHum[i]);
+        //console.log("hit");
+    }
+
+    setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate, value);
+    //console.log(cityName);
+    displayCityList();
+    displayCityInfo(cityName);
+    displayForecast(cityName);
 }
 
 //=============================CHECK UV INDEX=======================
 function checkUVIndexValue(index){
     index = parseInt(index);
     if(index < 3){
-        uvClass = ".green";
+        return ".green";
     }
     else if(index >=3 && index <= 5)
     {
-        uvClass = ".yellow";
+        return ".yellow";
     }
     else if(index >=6 && index <= 7)
     {
-        uvClass = ".orange";
+        return ".orange";
     }
     else 
     {
-        uvClass = ".red";
+        return ".red";
     }
-    return uvClass;
 }
 //add a click event to cities to get cities info and call a display function
 //each display is going to have a button to be able to  change display from response   

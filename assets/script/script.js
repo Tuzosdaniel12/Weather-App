@@ -167,7 +167,7 @@ function findUvIndex(lat, lon, object){
     });
     
 }
-//=================GET RESPONSE AND SET DATA=====================
+//=================GET CITY RESPONSE AND SET DATA=====================
 function firstResponse(object,value){
     var cityName = object.city.name;
     var cityHum = [];

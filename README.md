@@ -55,6 +55,12 @@ THEN I am presented with the last searched city forecast
 - Added geolocation feature to app as well
 
 ## Work-Examples
+![weather-code](https://github.com/Tuzosdaniel12/Weather-App/blob/main/assets/images/work-01.png)
+![weather-code](https://github.com/Tuzosdaniel12/Weather-App/blob/main/assets/images/work-02.png)
+![weather-code](https://github.com/Tuzosdaniel12/Weather-App/blob/main/assets/images/work-03.png)
+![weather-code](https://github.com/Tuzosdaniel12/Weather-App/blob/main/assets/images/work-04.png)
+![weather-code](https://github.com/Tuzosdaniel12/Weather-App/blob/main/assets/images/work-05.png)
+![weather-code](https://github.com/Tuzosdaniel12/Weather-App/blob/main/assets/images/work-06.png)
 
 ## Links
 

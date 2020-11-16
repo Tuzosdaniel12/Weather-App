@@ -51,7 +51,8 @@ THEN I am presented with the last searched city forecast
 - used lon and lat of the city to then get another call to get the uv index out.
 - When I got all data saved in a variable I then pasted in to local storage to be stored
 - continue by calling the display functions to render data back to user
-- Added click event to history list on left to fetch the data and render back to 
+- Added click event to history list on left to fetch the data and render back
+- Added geolocation feature to app as well
 
 ## Work-Examples
 
@@ -61,5 +62,4 @@ THEN I am presented with the last searched city forecast
   https://tuzosdaniel12.github.io/Weather-App
 
 - Repo
-
-https://github.com/Tuzosdaniel12/Weather-App
+  https://github.com/Tuzosdaniel12/Weather-App

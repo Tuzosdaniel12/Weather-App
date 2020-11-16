@@ -178,9 +178,7 @@ function firstResponse(object,value){
     var citySpeed = [];
     var cityDate = [];
     
-    if(checkDoubleSearchCity(cityName)){
-        alert('You already picked this city');
-        return};
+    if(checkDoubleSearchCity(cityName)){return};
     
     for(var i = 0; i < 5; i++){
         //console.log("hit");

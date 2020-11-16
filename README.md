@@ -14,7 +14,7 @@
 
 ## User-Expectation
 
-![weather dashboard demo](assets/06-server-side-apis-homework-demo.png)
+![weather dashboard demo](https://github.com/Tuzosdaniel12/Weather-App/blob/main/assets/images/06-server-side-apis-homework-demo.png)
 
 ## User-Story
 

@@ -21,7 +21,9 @@ function searchCity(e){
     e.preventDefault();
     //get the value of the city
     var city = citiesEl.val().toLowerCase();
-
+    getWeather(city);
+}
+function getWeather(city){
     var APIKey = "32cb77893648df67d6826f666fc7871c";
     var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + APIKey;
     

@@ -212,6 +212,6 @@ displayLastCity();
 
 //==================EVENT LISTENERS====================
 
-citiesEl.submit(searchCity);
+citiesEl.on('submit', searchCity);
 btnCities.on('click', searchCity);
 cityListEL.on('click', cityHistoryEvent);

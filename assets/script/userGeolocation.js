@@ -1,6 +1,6 @@
 
 
-function weatherByUSerLocation(){
+weatherByUSerLocation = () =>{
     if (navigator.geolocation) {
         console.log(navigator.geolocation)
         navigator.geolocation.getCurrentPosition(findUserPosition);
@@ -9,13 +9,13 @@ function weatherByUSerLocation(){
     }
 }
 
-function findUserPosition(position){
+findUserPosition = (position) =>{
     lat = position.coords.latitude;
     lon =position.coords.longitude;
 
-    var APIKey = "32cb77893648df67d6826f666fc7871c";
+    const APIKey = "32cb77893648df67d6826f666fc7871c";
     
-    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lon+"&appid="+ APIKey;
+    const queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lon+"&appid="+ APIKey;
     
     $.ajax({
         url: queryURL,

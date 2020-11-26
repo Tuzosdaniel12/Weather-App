@@ -1,31 +1,28 @@
 //add auto fill to cities text box
-var citiesEl = $('#cities');
-var btnCities = $('#btn-search');
-var cityListEL = $('#cities-list');
-var cityInfoEl = $('#city-info');
-var forecastEl = $('#forecast');
+const citiesEl = $('#cities');
+const btnCities = $('#btn-search');
+const cityListEL = $('#cities-list');
+const cityInfoEl = $('#city-info');
+const forecastEl = $('#forecast');
 
-var cities  = [];
-var uvIndex = [];
-var uvClass;
-var lastCityDisplay;
-var value;
-
+let lastCityDisplay;
 
 citiesEl.autocomplete({
       source: citiesTags
 });
 
 //=================SEARCH CITY FUNCTION===============
-function searchCity(e){
+ searchCity = e =>{
     e.preventDefault();
     //get the value of the city
     var city = citiesEl.val().toLowerCase();
     getWeather(city);
 }
-function getWeather(city){
-    var APIKey = "32cb77893648df67d6826f666fc7871c";
-    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + APIKey;
+
+//=================WEATHER API FUNCTION===============
+getWeather = (city) =>{
+    const APIKey = "32cb77893648df67d6826f666fc7871c";
+    const queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&appid=" + APIKey;
     
     $.ajax({
         url: queryURL,
@@ -35,126 +32,9 @@ function getWeather(city){
         findUvIndex(response.city.coord.lat, response.city.coord.lon, response);
     });
 }
-//==============DISPLAY CITY FUNCTION===============
-function displayCityList(){
-    cityListEL.empty();
-
-    var jsonCitiesArray = getDataFromLocalStorage();
-    if(jsonCitiesArray == null){return};
-    for( var i = 0; i < jsonCitiesArray.length; i++){
-        var cityTitle = $('<li>').addClass('list-group-item')
-                                 .attr('data-city', jsonCitiesArray[i].cityName)
-                                 .attr('data-index', i)
-                                 .text(jsonCitiesArray[i].cityName);
-        cityListEL.prepend(cityTitle);
-    } 
-}
-//=================DISPLAY HISTORY CITY===============
-function cityHistoryEvent(e){
-    e.preventDefault();
-    console.log("hit");
-    console.log($(e.target).data('city'));
-    displayCityInfo($(e.target).data('city'));
-    displayForecast($(e.target).data('city'));
-    lastCityDisplay = parseInt($(e.target).data('index'));
-
-    localStorage.setItem('lastCityDisplay', JSON.stringify(lastCityDisplay));
-}
-
-//=================DISPLAY CITY INFO===============
-function displayCityInfo(city){
-    //console.log("hit");
-    cityInfoEl.empty();
-
-    var jsonCitiesArray = getDataFromLocalStorage();
-    if(jsonCitiesArray == null){return};
-    for( var i = 0; i < jsonCitiesArray.length; i++){
-        if(jsonCitiesArray[i].cityName === city){
-            var title = $("<h3>").text(jsonCitiesArray[i].cityName + " " +"(" +jsonCitiesArray[i].cityDate[0]+")");
-            var temp = $("<p>").text("Temperature: "+ jsonCitiesArray[i].cityTemp[0] + " F");
-            var hum = $("<p>").text("Humidity: "+ jsonCitiesArray[i].cityHum[0] + "%");
-            var windSpeed = $('<p>').text("Wind Speed: " + jsonCitiesArray[i].citySpeed[0] + " MPH");
-            var icon = $('<img>').attr('src', jsonCitiesArray[i].cityIcon[0]);  
-            var uv = $('<p>').text("UV Index: "+ jsonCitiesArray[i].uvIndex).addClass(checkUVIndexValue(jsonCitiesArray[i].uvIndex));        
-        }
-        
-        //title.append(icon);
-        cityInfoEl.append(title,temp,hum, windSpeed, icon, uv);
-    }
-}
-//=================DISPLAY 5 Day FORECAST===============
-function displayForecast(city){
-    forecastEl.empty();
-    var jsonCitiesArray = getDataFromLocalStorage();
-    if(jsonCitiesArray == null){return};
-    for( var i = 0; i < jsonCitiesArray.length; i++){
-        if(jsonCitiesArray[i].cityName === city){
-            for( var j = 0; j < 5; j++){
-                var forecastDiv = $('<div>').addClass('col-12 col-md-2  bg-primary rounded ml-3 mb-3');
-                var dateEl = $('<h6>').text(jsonCitiesArray[i].cityDate[j]);
-                var iconEl = $('<img>').attr('src',jsonCitiesArray[i].cityIcon[j]);
-                var tempEl = $('<p>').text("Temp: "+jsonCitiesArray[i].cityTemp[j]+ "F");
-                var humEl = $('<p>').text("Humidity: "+jsonCitiesArray[i].cityHum[j]+"%");
-
-                forecastDiv.append(dateEl,iconEl,tempEl,humEl);
-                forecastEl.append(forecastDiv);
-            }
-        }
-    }
-
-}
-
-//=================SET DATA TO lOCAL STORAGE===============
-function setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate,uvIndex){
-    console.log("uvINdex line 137: "+ uvIndex);
-    if(getDataFromLocalStorage() !== null){
-        cities = getDataFromLocalStorage();
-        console.log(cities);
-    }
-    cities.push({ cityName:cityName,
-                  cityHum:cityHum,
-                  cityTemp:cityTemp,
-                  cityIcon: cityIcon,
-                  citySpeed: citySpeed,
-                  cityDate: cityDate,
-                  uvIndex: uvIndex
-    });
-    localStorage.setItem('allTheCitiesSearchedFor', JSON.stringify(cities));
-}
-
-//=================TO FAHRENHEIT============================
-function toFahrenheit(temp){
-    return Math.round((parseInt(temp) - 273.15) * 1.8 + 32);
-}
-//=========================DATE============================
-function date(num){
-    return moment().add(num,'days').format("MM/DD/YYYY");
-}
-//=========================GET============================
-function getDataFromLocalStorage(){
-    return JSON.parse(localStorage.getItem('allTheCitiesSearchedFor'));
-}
-
-//===================CHECK DOUBLE SEARCHED CITIES=====================
-function checkDoubleSearchCity(city){
-    var jsonCitiesArray = getDataFromLocalStorage();
-    if(jsonCitiesArray == null){return};
-    var count = 0;
-    for( var i = 0; i < jsonCitiesArray.length; i++){
-        if(jsonCitiesArray[i].cityName == city){
-            count++;
-        }    
-    }
-    if(count === 0){
-        return false;
-    }
-    else{
-        return true;
-    }
-}
 
 //================= SET UV  INDEX============================
-function findUvIndex(lat, lon, object){
+findUvIndex = (lat, lon, object) => {
     var APIKey = "32cb77893648df67d6826f666fc7871c";
     var queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat="+ lat +"&lon="+lon +"&appid=" + APIKey;
     
@@ -170,37 +50,132 @@ function findUvIndex(lat, lon, object){
     
 }
 //=================GET CITY RESPONSE AND SET DATA=====================
-function firstResponse(object,value){
-    var cityName = object.city.name;
-    var cityHum = [];
-    var cityTemp = [];
-    var cityIcon = [];
-    var citySpeed = [];
-    var cityDate = [];
+firstResponse = (object,value) =>{
+    let cityName = object.city.name;
+    let cityHum = [];
+    let cityTemp = [];
+    let cityIcon = [];
+    let citySpeed = [];
+    let cityDate = [];
+    console.log(object)
     
-    if(checkDoubleSearchCity(cityName)){return};
-    
-    for(var i = 0; i < 5; i++){
+    for(let i = 0; i < 5; i++){
         //console.log("hit");
         cityHum.push(object.list[i].main.humidity);
         cityTemp.push(toFahrenheit(object.list[i].main.temp));
         cityIcon.push("http://openweathermap.org/img/w/" + object.list[i].weather[0].icon + ".png");
         citySpeed.push(object.list[i].wind.speed);
         cityDate.push(date(i));
-        
-        //console.log(cityHum[i]);
-        //console.log("hit");
     }
 
-    setToLocalStorage(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate, value);
-    //console.log(cityName);
+    setToLocalStorage(cityName);
+
+    lastCityDisplay = cityName;
+    localStorage.setItem('lastCityDisplay', JSON.stringify(lastCityDisplay));
+
     displayCityList();
-    displayCityInfo(cityName);
-    displayForecast(cityName);
+    displayCityInfo(cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate, value);
+    displayForecast(cityHum, cityTemp, cityIcon, cityDate);
+
+    lastCityDisplay = cityName;
+    localStorage.setItem('lastCityDisplay', JSON.stringify(lastCityDisplay));
 }
 
+//==============DISPLAY CITY FUNCTION===============
+displayCityList = () => {
+    cityListEL.empty();
+
+    let jsonCitiesArray = getDataFromLocalStorage();
+    if(jsonCitiesArray == null){return};
+    for( let i = 0; i < jsonCitiesArray.length; i++){
+        let cityTitle = $('<li>').addClass('list-group-item')
+                                 .attr('data-city', jsonCitiesArray[i])
+                                 .attr('data-index', i)
+                                 .text(jsonCitiesArray[i]);
+        cityListEL.prepend(cityTitle);
+    } 
+}
+//=================DISPLAY HISTORY CITY===============
+cityHistoryEvent = e =>{
+    e.preventDefault();
+    let city = $(e.target).data('city').toLowerCase()
+    getWeather(city);
+   
+    lastCityDisplay = $(e.target).data('city');
+
+    localStorage.setItem('lastCityDisplay', JSON.stringify(lastCityDisplay));
+}
+
+//=================DISPLAY CITY INFO===============
+displayCityInfo = (cityName, cityHum, cityTemp, cityIcon, citySpeed,cityDate, uvIndex) =>{
+    //console.log("hit");
+        cityInfoEl.empty();
+            const title = $("<h3>").text(cityName + " " +"(" +cityDate[0]+")");
+            const temp = $("<p>").text("Temperature: "+cityTemp[0] + " F");
+            const hum = $("<p>").text("Humidity: "+ cityHum[0] + "%");
+            const windSpeed = $('<p>').text("Wind Speed: " + citySpeed[0] + " MPH");
+            const icon = $('<img>').attr('src', cityIcon[0]);  
+            const uv = $('<p>').text("UV Index: "+ uvIndex).addClass(checkUVIndexValue(uvIndex));        
+        //title.append(icon);
+            cityInfoEl.append(title,temp,hum, windSpeed, icon, uv);
+
+}
+//=================DISPLAY 5 Day FORECAST===============
+displayForecast = (cityHum, cityTemp, cityIcon, cityDate) =>{
+    forecastEl.empty();
+    for( let j = 0; j < 5; j++){
+        const forecastDiv = $('<div>').addClass('col-12 col-md-2  bg-primary rounded ml-3 mb-3');
+        const dateEl = $('<h6>').text(cityDate[j]);
+        const iconEl = $('<img>').attr('src',cityIcon[j]);
+        const tempEl = $('<p>').text("Temp: "+cityTemp[j]+ "F");
+        const humEl = $('<p>').text("Humidity: "+cityHum[j]+"%");
+
+        forecastDiv.append(dateEl,iconEl,tempEl,humEl);
+        forecastEl.append(forecastDiv);
+        }
+
+
+}
+
+//=================SET DATA TO lOCAL STORAGE===============
+function setToLocalStorage(cityName){
+    let cities  = [];
+
+    if(getDataFromLocalStorage() !== null){
+        cities = getDataFromLocalStorage();
+        console.log(cities);
+    }
+    if(checkDoubleSearchCity(cityName)){return};
+    cities.push(cityName);
+
+    localStorage.setItem('allTheCitiesSearchedFor', JSON.stringify(cities));
+}
+
+//=================TO FAHRENHEIT============================
+toFahrenheit = temp => Math.round((parseInt(temp) - 273.15) * 1.8 + 32);
+
+//=========================DATE============================
+date = num => moment().add(num,'days').format("MM/DD/YYYY");
+
+//=========================GET============================
+getDataFromLocalStorage = () => JSON.parse(localStorage.getItem('allTheCitiesSearchedFor'));
+
+//===================CHECK DOUBLE SEARCHED CITIES=====================
+checkDoubleSearchCity = city =>{
+    let jsonCitiesArray = getDataFromLocalStorage();
+    if(jsonCitiesArray == null){return};
+    if(jsonCitiesArray.includes(city)){
+        return  true
+    }
+    else{
+        return false;
+    }
+}
+
+
+
 //=============================CHECK UV INDEX=======================
-function checkUVIndexValue(index){
+ checkUVIndexValue = index =>{
     index = parseInt(index);
     if(index < 3){
         return " styleUV-index green";
@@ -221,16 +196,19 @@ function checkUVIndexValue(index){
 //add a click event to cities to get cities info and call a display function
 //each display is going to have a button to be able to  change display from response   
 //
+//=============================DISPLAY LAST CITY IF NO GEOLOCATION=======================
+displayLastCity = () =>{
+    if (JSON.parse(localStorage.getItem('lastCityDisplay')) !== null){
+    var get = getDataFromLocalStorage();
+    lastCityDisplay = JSON.parse(localStorage.getItem('lastCityDisplay'));
+    //console.log(lastCityDisplay);
+    getWeather(lastCityDisplay.toLowerCase());
+    }
+}
 
 displayCityList();
+displayLastCity();
 
-if (JSON.parse(localStorage.getItem('lastCityDisplay')) !== null){
-var get = getDataFromLocalStorage();
-lastCityDisplay = JSON.parse(localStorage.getItem('lastCityDisplay'));
-//console.log(lastCityDisplay);
-displayCityInfo(get[lastCityDisplay].cityName);
-displayForecast(get[lastCityDisplay].cityName);
-}
 
 //==================EVENT LISTENERS====================
 

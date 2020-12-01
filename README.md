@@ -1,6 +1,6 @@
 # Weather-App
 
-- [Task](#Task)
+- [Description](#Description)
 - [User Expectation](#User-Expectation)
 - [User Story](#User-Story)
 - [Acceptance Criteria](#Acceptance-Criteria)
@@ -8,9 +8,13 @@
 - [Work Examples](#Work-Examples)
 - [Links](#Links)
 
-## Task
+## Description
 
 - Create a Weather app that can fetch data from weather api and render data back to the user, Temperature, Humidity, Wind speed ,UV Index, City Name and five day forecast.
+
+## Licence
+
+
 
 ## User-Expectation
 
